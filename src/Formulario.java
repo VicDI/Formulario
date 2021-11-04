@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -11,7 +12,7 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     JTextField [] TextField = new JTextField[8];
     JTextField Otroidioma;
     String [] Paises ={"España","Francia","Belgica","Alemania","Portugal"};
-    String [] TextoLabel ={"Nombre:","Apellido:","Dirección:","telefono:","CP:","NIF:","Email:","Contraseña:","Pais:","Provincia:","Poblacion:","Sexo:","Idiomas:","carta de presentación"};
+    String [] TextoLabel ={"Nombre:","Apellido:","Dirección:","Teléfono:","CP:","NIF:","Email:","Contraseña:","Pais:","Provincia:","Poblacion:","Sexo:","Idiomas:","CARTA DE PRESENTACIÓN"};
     int numLabels = 14;
     int numTextField = 8;
     int anchoLabel = 100;
@@ -23,20 +24,35 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     int [] xTextField = {120,120,120,120,120,120,120,120};
     int [] yTextField = {15,65,215,265,165,315,115,415};
 
-    private JPasswordField contrasenia;
-    private JRadioButton Hombre,Mujer,Otros;
-    private ButtonGroup Sexo;
-    private JComboBox Pais,Provincia;
-    private JCheckBox Castellano, Ingles, Frances, Mas;
+    JPasswordField contrasenia;
+    JRadioButton Hombre,Mujer,Otros;
+    ButtonGroup Sexo;
+    JComboBox Pais,Provincia;
+    JCheckBox Castellano, Ingles, Frances, Mas;
+    JTextArea Carta_de_presesentación;
+    JMenu Colores;
+    JMenuItem AMARILLO, CYAN, ROJO, VERDE, Salir;
+    JMenuBar menuBar;
 
+    private JMenuBar menuBar1;
+    private JMenu Fuentes;
+    private JMenuItem a20,a25,a15,a10, a27;
+
+    JTextPane ejecutado = new JTextPane();
+    JButton generar;
 
     public Formulario() {
+
         initLabels();
         initTextField();
         initPasswordField();
         intitRadioButton();
         intitCheckBox();
         intitCombobox();
+        initTextArea();
+        initMenu();
+        initButton();
+        initTextPane();
         initPantalla();
 
     }
@@ -60,9 +76,9 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
             if (i == 13) ancho = 250;
             if (i == 7) ancho = 120;
             datos[i].setBounds(xLabels[i], yLabels[i], ancho, altoLabel);
-            datos[i].setFont(new Font("Monospaced",Font.PLAIN,16));
+            datos[i].setFont(new Font("Laguna7",Font.PLAIN,16));
             datos[i].setOpaque(true);
-            datos[i].setBackground(Color.WHITE);
+            datos[i].setBackground(Color.PINK);
             datos[i].setForeground(Color.BLACK);
             add(datos[i]);
         }
@@ -73,14 +89,55 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
         for(int i = 0; i < numTextField; i++){
             TextField[i] = new JTextField();
             TextField[i].setBounds(xTextField[i], yTextField[i], anchoTextField, altoTextField);
-            TextField[i].setFont(new Font("Monospaced",Font.PLAIN,16));
+            TextField[i].setFont(new Font("Laguna7",Font.PLAIN,16));
             TextField[i].setOpaque(true);
             TextField[i].setBackground(Color.WHITE);
             TextField[i].setBorder(new LineBorder(Color.DARK_GRAY));
             TextField[i].setForeground(Color.BLACK);
             add(TextField[i]);
         }
+        TextField[4].addKeyListener(new KeyAdapter(){
+
+                                        public void keyTyped(KeyEvent e)
+
+                                        {
+                                            if (TextField[4].getText().length()== 5)
+
+                                                e.consume();
+                                        }
+                                    }
+        );
+
+        TextField[3].addKeyListener(new KeyAdapter(){
+
+                                        public void keyTyped(KeyEvent e)
+
+                                        {
+                                            if (TextField[3].getText().length()== 9)
+
+                                                e.consume();
+                                        }
+                                    }
+        );
+
+
         TextField[3].addKeyListener(new KeyAdapter() {
+                                        public void keyTyped(KeyEvent e) {
+                                            char caracter = e.getKeyChar();
+                                            if (((caracter < '0') || (caracter > '9'))
+                                                    && (caracter != '\b')) {
+                                                e.consume();
+                                            }
+                                        }
+                                    }
+        );
+
+
+
+
+
+
+        TextField[4].addKeyListener(new KeyAdapter() {
                                         public void keyTyped(KeyEvent e) {
                                             char caracter = e.getKeyChar();
                                             if (((caracter < '0') || (caracter > '9'))
@@ -191,6 +248,262 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
 
             }
         });
+    }
+
+    private void initTextArea() {
+        //En este Text Area crear una carta de presentación
+        Carta_de_presesentación = new JTextArea();
+        Carta_de_presesentación.setBounds(330, 250, 400, 300);
+        Carta_de_presesentación.setBorder(new LineBorder(Color.DARK_GRAY));
+        Carta_de_presesentación.setLineWrap(true);
+        add(Carta_de_presesentación);
+    }
+
+    private void initMenu() {
+        // Este es un menu donde puedes cambiar el color del fondo y cerrar la aplicación
+        menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+
+        Colores = new JMenu("Colores");
+        menuBar.add(Colores);
+
+
+        AMARILLO = new JMenuItem("AMARILLO");
+        Colores.add(AMARILLO);
+
+        CYAN = new JMenuItem("CYAN");
+        Colores.add(CYAN);
+
+        ROJO = new JMenuItem("ROJO");
+        Colores.add(ROJO);
+
+        VERDE = new JMenuItem("VERDE");
+        Colores.add(VERDE);
+
+
+        //generamos los ActionListener para poder hacer cambios en pantalla
+        AMARILLO.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getContentPane().setBackground(Color.YELLOW);
+                for (int i = 0; i < 14; i++) {
+                    datos[i].setBackground(Color.yellow);
+                }
+            }
+
+        });
+        CYAN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < 14; i++) {
+                    getContentPane().setBackground(Color.CYAN);
+                    datos[i].setBackground(Color.CYAN);
+                }
+            }
+        });
+        ROJO.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getContentPane().setBackground(Color.RED);
+                for (int i = 0; i < 14; i++) {
+                    datos[i].setBackground(Color.RED);
+                }
+            }
+        });
+        VERDE.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getContentPane().setBackground(Color.GREEN);
+                for (int i = 0; i < 14; i++) {
+                    datos[i].setBackground(Color.GREEN);
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+        Fuentes = new JMenu("Tamaño");
+        menuBar.add(Fuentes);
+
+        a20 = new JMenuItem("20");
+        Fuentes.add(a20);
+
+        a25 = new JMenuItem("18");
+        Fuentes.add(a25);
+
+        a15 = new JMenuItem("15");
+        Fuentes.add(a15);
+
+
+        a10 = new JMenuItem("10");
+        Fuentes.add(a10);
+
+
+
+        a27 = new JMenuItem("8");
+        Fuentes.add(a27);
+
+
+
+
+        Salir = new JMenuItem("Salir");
+        menuBar.add(Salir);
+        Salir.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+
+        });
+
+
+        a20.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                for (int i = 0; i < 14; i++) {
+                    datos[i].setFont(new Font("Monospaced", Font.PLAIN, 17));
+                    contrasenia.setFont(new Font("Monospaced", Font.PLAIN, 17));
+
+
+                }
+            }
+        });
+
+        a25.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                for (int i = 0; i < 14; i++) {
+                    datos[i].setFont(new Font("Monospaced", Font.PLAIN, 16));
+                    contrasenia.setFont(new Font("Monospaced", Font.PLAIN, 16));
+
+
+                }
+            }
+        });
+
+        a27.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                for (int i = 0; i < 14; i++) {
+                    datos[i].setFont(new Font("Monospaced", Font.PLAIN, 8));
+                    contrasenia.setFont(new Font("Monospaced", Font.PLAIN, 8));
+
+
+                }
+            }
+        });
+
+        a10.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                for (int i = 0; i < 14; i++) {
+                    datos[i].setFont(new Font("Monospaced", Font.PLAIN, 10));
+                    contrasenia.setFont(new Font("Monospaced", Font.PLAIN, 10));
+
+
+                }
+            }
+        });
+
+        a15.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                for (int i = 0; i < 14; i++) {
+                    datos[i].setFont(new Font("Monospaced", Font.PLAIN, 15));
+                    contrasenia.setFont(new Font("Monospaced", Font.PLAIN, 15));
+
+
+                }
+            }
+        });
+
+
+
+
+
+
+
+    }
+
+    private void initButton() {
+        //Este botón nos ayuda a generar el text panel en el cual vamos a presentar toda la informacion selecionada
+        generar = new JButton("GENERAR FORMULARIO");
+        generar.setBounds(100, 450, 200, 100);
+        generar.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        generar.setOpaque(true);
+        generar.setBackground(Color.WHITE);
+        generar.setBorder(new LineBorder(Color.DARK_GRAY));
+        generar.setForeground(Color.BLACK);
+        generar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == generar) {
+                    ejecutado.setVisible(true);
+                    String sexo;
+                    String numero_idiomas = "";
+                    if (Hombre.isSelected()) {
+                        sexo = "Hombre";
+                    } else if (Mujer.isSelected()) {
+                        sexo = "Mujer";
+                    } else {
+                        sexo = "Otro";
+                    }
+                    if (Castellano.isSelected()) {
+                        numero_idiomas = numero_idiomas + "Castelllano";
+                    }
+                    if (Frances.isSelected()) {
+                        numero_idiomas = numero_idiomas + " Frances";
+                    }
+                    if (Ingles.isSelected()) {
+                        numero_idiomas = numero_idiomas + " Inglés";
+                    }
+                    if (Mas.isSelected()) {
+                        numero_idiomas = numero_idiomas + " Japonees";
+                    }
+                    ejecutado.setText(
+                            //aqui definimos que se va a trasmitir dentro del jPanel y en que orden y como
+                            "<span style='margin-left:50px;'>&nbsp;&nbsp;Nombre</span><br>" + TextField[0].getText() + "<br>" +
+                                    "<i>Apellido</i><br>" + TextField[1].getText() + "<br>" +
+                                    "<i>Dirección</i><br>" + TextField[2].getText() + "<br>" +
+                                    "<i>Teléfono</i><br>" + TextField[3].getText() + "<br>" +
+                                    "<i>CP</i><br>" + TextField[4].getText() + "<br>" +
+                                    "<i>NIF</i><br>" + TextField[5].getText() + "<br>" +
+                                    "<i>Email</i><br>" + TextField[6].getText() + "<br>" +
+                                    "<i>Contraseña</i><br>" + contrasenia.getText() + "<br>" +
+                                    "<i>Pais</i><br>" + Pais.getItemAt(Pais.getSelectedIndex()) + "<br>" +
+                                    "<i>Provincia</i><br>" + Provincia.getItemAt(Provincia.getSelectedIndex()) + "<br>" +
+                                    "<i>Población</i><br>" + TextField[7].getText() + "<br>" +
+                                    "<i>Sexo</i><br>" + sexo + "<br>" +
+                                    "<i>Idiomas</i><br>" + numero_idiomas + "<br>" +
+                                    "<i>Carta de presentación</i><br>" + Carta_de_presesentación.getText().replaceAll("\n", "<br>") + "<br>"
+
+
+                    );
+                }
+            }
+        });
+        add(generar);
+    }
+
+    private void initTextPane() {
+        //este text panel es donde se trasmitira toda la información que hemos escrito en nuestro formulario
+        ejecutado.setBounds(750, 10, 400, 650);
+        ejecutado.setBorder(new LineBorder(Color.DARK_GRAY));
+        ejecutado.setVisible(false);
+        add(ejecutado);
+        HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
+        ejecutado.setEditorKit(htmlEditorKit);
+
     }
 
     public static void main(String[] args) {
