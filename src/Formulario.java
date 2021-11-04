@@ -1,3 +1,5 @@
+import org.w3c.dom.Text;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -17,12 +19,16 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     int numTextField = 8;
     int anchoLabel = 100;
     int altoLabel = 30;
-    int anchoTextField = 150;
+    int anchoTextField = 120;
     int altoTextField = 20;
     int [] xLabels = {10,10,10,10,10,10,10,10,330,330,10,330,330,330};
-    int [] yLabels = {10,60,210,260,160,310,110,360,10,60,410,110,160,210};
+    int [] yLabels = {10,60,210,260,160,310,110,360,10,60,410,110,160,250};
     int [] xTextField = {120,120,120,120,120,120,120,120};
     int [] yTextField = {15,65,215,265,165,315,115,415};
+
+    char[] letraDni = {
+            'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D',  'X',  'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'
+    };
 
     JPasswordField contrasenia;
     JRadioButton Hombre,Mujer,Otros;
@@ -31,9 +37,10 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     JCheckBox Castellano, Ingles, Frances, Mas;
     JTextArea Carta_de_presesentación;
     JMenu Colores;
-    JMenuItem AMARILLO, CYAN, ROJO, VERDE, Salir;
+    JMenuItem AMARILLO, CYAN, ROJO, VERDE, Salir, Limpiar;
     JMenuBar menuBar;
 
+    int ind;
     private JMenuBar menuBar1;
     private JMenu Fuentes;
     private JMenuItem a20,a25,a15,a10, a27;
@@ -57,8 +64,11 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
 
     }
 
+
+
+
     private void initPantalla() {
-        //aqui definimos la Pantalla de nuestro proyecto
+
         setLayout(null);
         setTitle("Formulario");
         setSize(450,510);
@@ -68,8 +78,15 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
         setVisible(true);
     }
 
+    private void initPasswordField() {
+
+        contrasenia = new JPasswordField();
+        contrasenia.setBounds(120, 365, 150, 20);
+        add(contrasenia);
+    }
+
     public void initLabels(){
-        // los labels son todos los nombres que les hemos puestos a nuestros objetos
+
         for(int i = 0; i < numLabels; i++){
             datos[i] = new JLabel(TextoLabel[i]);
             int ancho = (i == 8 ||i == 11) ? 50 : anchoLabel;
@@ -85,7 +102,7 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     }
 
     private void initTextField() {
-        // generamos las zonas de texto
+
         for(int i = 0; i < numTextField; i++){
             TextField[i] = new JTextField();
             TextField[i].setBounds(xTextField[i], yTextField[i], anchoTextField, altoTextField);
@@ -96,6 +113,8 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
             TextField[i].setForeground(Color.BLACK);
             add(TextField[i]);
         }
+
+
         TextField[4].addKeyListener(new KeyAdapter(){
 
                                         public void keyTyped(KeyEvent e)
@@ -137,6 +156,7 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
 
 
 
+
         TextField[4].addKeyListener(new KeyAdapter() {
                                         public void keyTyped(KeyEvent e) {
                                             char caracter = e.getKeyChar();
@@ -149,15 +169,11 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
         );
     }
 
-    private void initPasswordField() {
-        //aqui nos permite que la contraseña no sea visulizable al escribirla
-        contrasenia = new JPasswordField();
-        contrasenia.setBounds(150, 365, 150, 20);
-        add(contrasenia);
-    }
+
+
 
     private void intitRadioButton() {
-        // Este RadioButton sirve para determinar el sexo de la persona que esta escribiendo formulario
+
         Sexo = new ButtonGroup();
 
         Hombre=new JRadioButton("Hombre");
@@ -180,7 +196,7 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     }
 
     private void intitCombobox() {
-        //En el combo box daremos la opción de elegir el lugar donde vive
+
         Pais=new JComboBox();
         Pais.setBounds(400,15,80,20);
         add(Pais);
@@ -196,8 +212,7 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
 
 
 
-        //intente usar change itemStateChanged, pero no conseguí generar los cambios. he pensado en borrarlos cada vez que se cambiaran de
-        //seleccion pero sin resultado.
+
         paisecogido = (String) Pais.getItemAt(Pais.getSelectedIndex());
         System.out.println(paisecogido);
         if (paisecogido.equals("España")) {
@@ -214,14 +229,14 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     }
 
     private void intitCheckBox() {
-        //Los checkBox no ayudan a definir cuantos idiomas conoce el individuo
+
         Castellano = new JCheckBox("Castellano");
         Castellano.setBounds(430, 160, 90, 30);
         Castellano.setBackground(Color.WHITE);
         add(Castellano);
 
         Ingles = new JCheckBox("Inglés");
-        Ingles.setBounds(520, 160, 70, 30);
+        Ingles.setBounds(520, 160, 90, 30);
         Ingles.setBackground(Color.WHITE);
         add(Ingles);
 
@@ -231,7 +246,7 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
         add(Frances);
 
         Mas = new JCheckBox("Otros");
-        Mas.setBounds(680, 160, 90, 30);
+        Mas.setBounds(680, 160, 70, 30);
         Mas.setBackground(Color.WHITE);
         add(Mas);
         Mas.addActionListener(new ActionListener() {
@@ -239,7 +254,7 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
             public void actionPerformed(ActionEvent e) {
                 Otroidioma = new JTextField("");
                 add(Otroidioma);
-                Otroidioma.setBounds(6800,300,100,30);
+                Otroidioma.setBounds(430,210,100,23);
                 Otroidioma.setOpaque(true);
                 Otroidioma.setBackground(Color.WHITE);
                 Otroidioma.setBorder(new LineBorder(Color.DARK_GRAY));
@@ -251,16 +266,16 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     }
 
     private void initTextArea() {
-        //En este Text Area crear una carta de presentación
+
         Carta_de_presesentación = new JTextArea();
-        Carta_de_presesentación.setBounds(330, 250, 400, 300);
+        Carta_de_presesentación.setBounds(330, 300, 400, 300);
         Carta_de_presesentación.setBorder(new LineBorder(Color.DARK_GRAY));
         Carta_de_presesentación.setLineWrap(true);
         add(Carta_de_presesentación);
     }
 
     private void initMenu() {
-        // Este es un menu donde puedes cambiar el color del fondo y cerrar la aplicación
+
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
@@ -281,13 +296,17 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
         Colores.add(VERDE);
 
 
-        //generamos los ActionListener para poder hacer cambios en pantalla
+
         AMARILLO.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 getContentPane().setBackground(Color.YELLOW);
                 for (int i = 0; i < 14; i++) {
                     datos[i].setBackground(Color.yellow);
+                    Castellano.setBackground(Color.yellow);
+                    Ingles.setBackground(Color.yellow);
+                    Frances.setBackground(Color.yellow);
+                    Mas.setBackground(Color.yellow);
                 }
             }
 
@@ -298,6 +317,10 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
                 for (int i = 0; i < 14; i++) {
                     getContentPane().setBackground(Color.CYAN);
                     datos[i].setBackground(Color.CYAN);
+                    Castellano.setBackground(Color.cyan);
+                    Ingles.setBackground(Color.cyan);
+                    Frances.setBackground(Color.cyan);
+                    Mas.setBackground(Color.cyan);
                 }
             }
         });
@@ -307,6 +330,11 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
                 getContentPane().setBackground(Color.RED);
                 for (int i = 0; i < 14; i++) {
                     datos[i].setBackground(Color.RED);
+
+                    Castellano.setBackground(Color.red);
+                    Ingles.setBackground(Color.red);
+                    Frances.setBackground(Color.red);
+                    Mas.setBackground(Color.red);
                 }
             }
         });
@@ -316,6 +344,7 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
                 getContentPane().setBackground(Color.GREEN);
                 for (int i = 0; i < 14; i++) {
                     datos[i].setBackground(Color.GREEN);
+
                 }
             }
         });
@@ -349,10 +378,33 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
         Fuentes.add(a27);
 
 
+        Limpiar = new JMenuItem("Limpiar");
+        menuBar.add(Limpiar);
 
 
         Salir = new JMenuItem("Salir");
         menuBar.add(Salir);
+
+
+
+        Limpiar.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                for(int i = 0; i < numTextField; i++){
+                    TextField[i] = new JTextField();
+
+                    TextField[i].setText("");
+
+                    add(TextField[i]);
+                }
+
+
+            }
+
+        });
+
+
         Salir.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -435,16 +487,19 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
 
     }
 
+
+
     private void initButton() {
-        //Este botón nos ayuda a generar el text panel en el cual vamos a presentar toda la informacion selecionada
+
         generar = new JButton("GENERAR FORMULARIO");
-        generar.setBounds(100, 450, 200, 100);
+        generar.setBounds(420, 630, 200, 100);
         generar.setFont(new Font("Monospaced", Font.PLAIN, 16));
         generar.setOpaque(true);
         generar.setBackground(Color.WHITE);
         generar.setBorder(new LineBorder(Color.DARK_GRAY));
         generar.setForeground(Color.BLACK);
         generar.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == generar) {
@@ -468,24 +523,27 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
                         numero_idiomas = numero_idiomas + " Inglés";
                     }
                     if (Mas.isSelected()) {
-                        numero_idiomas = numero_idiomas + " Japonees";
+                        numero_idiomas = numero_idiomas + Otroidioma.getText() ;
                     }
                     ejecutado.setText(
-                            //aqui definimos que se va a trasmitir dentro del jPanel y en que orden y como
-                            "<span style='margin-left:50px;'>&nbsp;&nbsp;Nombre</span><br>" + TextField[0].getText() + "<br>" +
-                                    "<i>Apellido</i><br>" + TextField[1].getText() + "<br>" +
-                                    "<i>Dirección</i><br>" + TextField[2].getText() + "<br>" +
-                                    "<i>Teléfono</i><br>" + TextField[3].getText() + "<br>" +
-                                    "<i>CP</i><br>" + TextField[4].getText() + "<br>" +
-                                    "<i>NIF</i><br>" + TextField[5].getText() + "<br>" +
-                                    "<i>Email</i><br>" + TextField[6].getText() + "<br>" +
-                                    "<i>Contraseña</i><br>" + contrasenia.getText() + "<br>" +
-                                    "<i>Pais</i><br>" + Pais.getItemAt(Pais.getSelectedIndex()) + "<br>" +
-                                    "<i>Provincia</i><br>" + Provincia.getItemAt(Provincia.getSelectedIndex()) + "<br>" +
-                                    "<i>Población</i><br>" + TextField[7].getText() + "<br>" +
-                                    "<i>Sexo</i><br>" + sexo + "<br>" +
-                                    "<i>Idiomas</i><br>" + numero_idiomas + "<br>" +
-                                    "<i>Carta de presentación</i><br>" + Carta_de_presesentación.getText().replaceAll("\n", "<br>") + "<br>"
+
+                            "<span style='margin-left:50px;'>&nbsp;&nbsp;" +
+
+                                    "<br>Nombre:  " +TextField[0].getText() + "<br>"+
+                                    "<br>Apellido:  " +TextField[1].getText() + "<br>"+
+                                    "<br>Dirección:  " +TextField[2].getText() + "<br>"+
+                                    "<br>Teléfono:  " +TextField[3].getText() + "<br>"+
+                                    "<br>CP:  " +TextField[4].getText() + "<br>"+
+                                    "<br>NIF:  " +TextField[5].getText() + "<br>"+
+                                    "<br>Contraseña:  " +TextField[6].getText() + "<br>"+
+                                    "<br>Contraseña:  " +contrasenia.getText() + "<br>"+
+                                    "<br>Pais:  " + Pais.getItemAt(Pais.getSelectedIndex()) + "<br>"+
+                                    "<br>Provincia:  " + Provincia.getItemAt(Provincia.getSelectedIndex()) + "<br>"+
+                                    "<br>Población:  " + TextField[7].getText() + "<br>"+
+                                    "<br>Sexo  " + sexo + "<br>"+
+                                    "<br>Idiomas:  " + numero_idiomas + "<br>"+
+                                    "<br>Idiomas:  " + Carta_de_presesentación.getText().replaceAll("\n", "<br>")  + "<br>"
+
 
 
                     );
@@ -496,8 +554,8 @@ public class Formulario extends JFrame  implements ChangeListener, ItemListener 
     }
 
     private void initTextPane() {
-        //este text panel es donde se trasmitira toda la información que hemos escrito en nuestro formulario
-        ejecutado.setBounds(750, 10, 400, 650);
+
+        ejecutado.setBounds(800, 10, 400, 650);
         ejecutado.setBorder(new LineBorder(Color.DARK_GRAY));
         ejecutado.setVisible(false);
         add(ejecutado);
